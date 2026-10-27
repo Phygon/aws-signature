@@ -51,7 +51,7 @@ export default class CanonicalRequest {
                 [name.toLowerCase(), value.trim().replace(/\s+/g, ' ').replace(/, /g, ',')]
             )
             .filter(([name]) =>
-                name === HEADER_HOST || name.startsWith('x-amz-') || signableHeaders?.has(name)
+                name === HEADER_HOST.toLowerCase() || name.startsWith('x-amz-') || signableHeaders?.has(name)
             )
             .sort(comparePair);
 

@@ -23,7 +23,7 @@ export function prepareRequest(request: RequestConfig | SignableRequest, options
  * @param options - Signing options; `credentials.secretAccessKey` is required.
  * @returns The signed URL as a string.
  */
-export function getSignedUrl(request: RequestConfig | SignableRequest, options: SignOptions): string {
+export function getSignedUrl(request: RequestConfig | SignableRequest, options: Omit<SignOptions, 'signQuery'>): string {
     const signer = prepareRequest(request, { ...options, signQuery: true });
     signer.sign();
     return signer.request.url.toString();

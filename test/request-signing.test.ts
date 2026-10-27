@@ -81,4 +81,22 @@ describe('request-signing', () => {
             /^[0-9a-f]{64}$/,
         );
     });
+
+    it('returns a signed URL with mixed case letters', () => {
+        const signedUrl = getSignedUrl(
+            {
+                url: 'https://ds9.s3.eu-west-1.amazonaws.com/file.txt',
+            },
+            {
+                ...signingOptions,
+                expires: 900,
+            },
+        );
+
+        const url = new URL(signedUrl);
+
+        expect(url.searchParams.has('X-Amz-Algorithm')).toBeTruthy();
+        expect(url.searchParams.has('X-Amz-Credential')).toBeTruthy();
+        expect(url.searchParams.has('X-Amz-Signature')).toBeTruthy();
+    });
 });
