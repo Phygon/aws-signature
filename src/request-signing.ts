@@ -8,7 +8,7 @@ import type { RequestConfig, SignOptions } from "./types.ts";
  * @param options - Options used to configure signing.
  * @returns The configured request signer.
  */
-export function prepareRequest(request: RequestConfig | SignableRequest, options: SignOptions) {
+export function prepareRequest(request: RequestConfig | SignableRequest, options: SignOptions): RequestSigner {
     const req = request instanceof SignableRequest
         ? request
         : new SignableRequest(request);
@@ -23,7 +23,7 @@ export function prepareRequest(request: RequestConfig | SignableRequest, options
  * @param options - Signing options; `credentials.secretAccessKey` is required.
  * @returns The signed URL as a string.
  */
-export function getSignedUrl(request: RequestConfig | SignableRequest, options: SignOptions) {
+export function getSignedUrl(request: RequestConfig | SignableRequest, options: SignOptions): string {
     const signer = prepareRequest(request, { ...options, signQuery: true });
     signer.sign();
     return signer.request.url.toString();

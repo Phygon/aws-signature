@@ -21,13 +21,13 @@ export default class SimpleLruCache<Key, Value> {
     }
 
     /** Removes all cached entries. */
-    clear() {
+    clear(): void {
         this.gen0 = new Map();
         this.gen1 = new Map();
     }
 
     /** Returns a cached value, promoting it if it is in the older generation. */
-    get(key: Key) {
+    get(key: Key): Value | undefined {
         if (this.gen0.has(key)) {
             return this.gen0.get(key);
         } else if (this.gen1.has(key)) {
@@ -39,7 +39,7 @@ export default class SimpleLruCache<Key, Value> {
     }
 
     /** Returns a cached value, or computes and caches one if absent. */
-    getOrCreate(key: Key, createValue: () => Value) {
+    getOrCreate(key: Key, createValue: () => Value): Value {
         if (this.gen0.has(key)) {
             return this.gen0.get(key)!;
         } else if (this.gen1.has(key)) {
@@ -54,12 +54,12 @@ export default class SimpleLruCache<Key, Value> {
     }
 
     /** Returns whether the key is present in either generation. */
-    has(key: Key) {
+    has(key: Key): boolean {
         return this.gen0.has(key) || this.gen1.has(key);
     }
 
     /** Adds or updates a value in the cache and returns it. */
-    set(key: Key, value: Value) {
+    set(key: Key, value: Value): Value {
         if (this.gen0.has(key)) {
             this.gen0.set(key, value);
         } else {

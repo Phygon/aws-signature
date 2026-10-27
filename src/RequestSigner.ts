@@ -14,7 +14,11 @@ export default class RequestSigner {
     readonly request: SignableRequest;
     // credentials and scope
     readonly credentials: Credentials;
-    readonly scope;
+    readonly scope: {
+        datetime: string;
+        region: string;
+        service: string;
+    };
     // extra sign parameters
     readonly expires: number;
     readonly signableHeaders: Set<string>;  // must be lowercase
@@ -51,7 +55,7 @@ export default class RequestSigner {
      * Prepares the request for signing, by adding the required signing
      * parameters to the query string or to the headers.
      */
-    prepareRequest() {
+    prepareRequest(): void {
         if (this.prepared) return;
         this.prepared = true;
 
@@ -63,7 +67,10 @@ export default class RequestSigner {
     }
 
     /** Builds the canonical request and string to sign. */
-    prepareSignature() {
+    prepareSignature(): {
+        canonicalRequest: string;
+        stringToSign: string;
+    } {
         this.prepareRequest();
         const canonicalRequest = new CanonicalRequest(this.request, this.signableHeaders).toString();
         const stringToSign = this.stringToSign(canonicalRequest);
@@ -78,7 +85,7 @@ export default class RequestSigner {
      * Signs the request.
      * Returns the finished request as convenience.
      */
-    sign() {
+    sign(): SignableRequest {
         const { stringToSign } = this.prepareSignature();
         const signature = this.createSignature(stringToSign);
         return this.addSignature(signature);
@@ -88,7 +95,7 @@ export default class RequestSigner {
      * Adds a signature to the request.
      * Returns the finished request as convenience.
      */
-    addSignature(signature: string) {
+    addSignature(signature: string): SignableRequest {
         if (this.signQuery) {
             this.request.url.searchParams.set(C.HEADER_AMZ_SIGNATURE, signature);
         } else {
@@ -107,7 +114,7 @@ export default class RequestSigner {
      * Creates a signature string.
      * Use `prepareSignature()` to retrieve `stringToSign`.
      */
-    createSignature(stringToSign: string) {
+    createSignature(stringToSign: string): string {
         if (!this.credentials.secretAccessKey) {
             throw new Error('secretAccessKey is required to derive a signing key');
         }
@@ -120,7 +127,7 @@ export default class RequestSigner {
     }
 
     /** Creates the AWS string to sign. */
-    stringToSign(canonicalRequest: string) {
+    stringToSign(canonicalRequest: string): string {
         return [
             C.AWS_ALGORITHM,
             this.scope.datetime,

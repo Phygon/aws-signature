@@ -18,7 +18,7 @@ export function encodeRfc3986(value: string): string {
 }
 
 /** convert `date` to the required ISO 8601 format: 'YYYYMMDDTTHHmmssZ' */
-export function getDateTime(date: number | string | Date) {
+export function getDateTime(date: number | string | Date): string {
     if (typeof date === 'string' && /(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z/.test(date)) {
         return date;
     }

@@ -32,7 +32,10 @@ export default class SignableRequest {
         }
     }
 
-    requestInit() {
+    requestInit(): {
+        method: string;
+        headers: Headers;
+    } {
         return {
             method: this.method,
             headers: this.headers,

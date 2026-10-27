@@ -5,7 +5,9 @@
     ],
     "compilerOptions": {
         "noEmit": true,
-        "types": ["node", "vitest/globals"]
+        "types": ["node"],
+        "declaration": true,
+        "isolatedDeclarations": true
     },
     "include": [
         "src/**/*",

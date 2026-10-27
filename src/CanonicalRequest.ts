@@ -42,7 +42,10 @@ export default class CanonicalRequest {
      * Builds the canonical and signed-header strings.
      * Always signs Host and x-amz-* headers, plus any explicitly requested headers.
      */
-    static canonicalizeHeaders(headers: Headers, signableHeaders?: Set<string>) {
+    static canonicalizeHeaders(headers: Headers, signableHeaders?: Set<string>): {
+        canonicalHeaders: string;
+        signedHeaders: string;
+    } {
         const pairs = headers.entries().toArray()
             .map(([name, value]): [string, string] =>
                 [name.toLowerCase(), value.trim().replace(/\s+/g, ' ').replace(/, /g, ',')]
@@ -70,7 +73,7 @@ export default class CanonicalRequest {
     }
 
     /** Assembles the canonical request string from its canonical components. */
-    toString() {
+    toString(): string {
         return [
             this.method,
             this.pathname,
